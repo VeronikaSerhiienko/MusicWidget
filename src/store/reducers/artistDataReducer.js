@@ -25,6 +25,7 @@ const artistDataReducer = (state = initialState, action) => {
         ...state,
         loaded: false,
         loading: false,
+        data: [],
         error: action.error
       }
     case actionTypes.ARTIST_DATA_CLEAR:

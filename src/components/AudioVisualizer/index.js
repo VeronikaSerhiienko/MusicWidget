@@ -6,9 +6,10 @@ import InputRange from 'react-input-range';
 import './styles.scss';
 
 import { currentSongDataSet } from '../../store/actions/currentSongActions';
+import { timeLengthConverter } from '../../utils';
 
 const useCompare = (val) => {
-    const prevVal = usePrevious(val)
+    const prevVal = usePrevious(val);
     return JSON.stringify(prevVal) !== JSON.stringify(val)
 }
 
@@ -28,15 +29,16 @@ const AudioVisualizer = ({
   onPlayBtnClick,
   onVolumeChange,
   onStopBtnClick,
+  onClearBtnClick,
   onProgressClick,
-  currentSong,
   currentSongDataSet,
-  artistData,
   artistData: {data: artistDataArray},
-  currentSong: {data, id: currentSongId}
+  currentSong: {id: currentSongId},
+  audionState: {playback, duration}
 }) => {
+  const durationConverted = timeLengthConverter(duration);
+  const playbackConverted = timeLengthConverter(playback);
   const currentSongData = getCurrentSongData();
-  console.log(123, currentSongData);
   const { preview, album, artist, title, index} = currentSongData;
   const currentSongCoverSmallUrl = album && album.cover_small ? album.cover_small : '';
   const currentSongCoverMediumUrl = album && album.cover_small ? album.cover_medium : '';
@@ -52,7 +54,11 @@ const AudioVisualizer = ({
   useEffect(() => {
     if (hasCurrentSongPreviewUrlChanged ) {
       onStopBtnClick();
-      onPlayBtnClick({currentSongPreviewUrl: currentSongPreviewUrl, frequencyC: canvasRef.current });
+      if(currentSongPreviewUrl) {
+        onPlayBtnClick({currentSongPreviewUrl: currentSongPreviewUrl, frequencyC: canvasRef.current });
+      } else {
+        onClearBtnClick();
+      }
     }
   });
 
@@ -102,6 +108,12 @@ const AudioVisualizer = ({
             )}
           </div>
           <div className="visualizing-container__bars-wrapper">
+            {currentSongCoverSmallUrl && (
+              <div className="visualizing-container__time-wrapper">
+                <p className="visualizing-container__playback">{playbackConverted}</p>
+                <p className="visualizing-container__duration">{durationConverted}</p>
+              </div>
+            )}
             <canvas className="frequency-bars" width="1024" height="100" ref={canvasRef}></canvas>
           </div>
         </div>

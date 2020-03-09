@@ -60,8 +60,6 @@ export function artistDataFetch(query) {
               if (!response.ok) {
                   throw Error(response.statusText);
               }
-
-                console.log(123, response);
               return response;
           })
           .then((response) => response.json())

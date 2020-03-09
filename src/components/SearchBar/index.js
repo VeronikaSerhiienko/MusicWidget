@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { artistDataFetch, artistDataClear } from '../../store/actions/artistDataActions';
+import { currentSongDataClear } from '../../store/actions/currentSongActions';
 import './styles.scss';
 
 class SearchBar extends React.Component {
@@ -15,12 +16,13 @@ class SearchBar extends React.Component {
 
   handleClick(event) {
     const { value } = this.state;
-    const { fetchData, clearData } = this.props;
+    const { fetchArtistData, clearArtistData, clearCurrentSongData } = this.props;
     event.preventDefault();
+    clearCurrentSongData()
     if (value) {
-      fetchData(value);
+      fetchArtistData(value);
     } else {
-      clearData();
+      clearArtistData();
     }
   }
 
@@ -48,8 +50,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-      fetchData: (url) => dispatch(artistDataFetch(url)),
-      clearData: () => dispatch(artistDataClear())
+      fetchArtistData: (url) => dispatch(artistDataFetch(url)),
+      clearArtistData: () => dispatch(artistDataClear()),
+      clearCurrentSongData: () => dispatch(currentSongDataClear())
   };
 }
 

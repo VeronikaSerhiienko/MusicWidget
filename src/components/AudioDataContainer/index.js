@@ -14,6 +14,7 @@ export const AudioDataContainer = compose(
     startedAt: null,
     pausedAt: null,
     isPause: true,
+    playback: 0,
     duration: 0,
   }),
   withProps(({ audionState, setAudionState }) => ({
@@ -24,6 +25,7 @@ export const AudioDataContainer = compose(
       const { player, url, audionState } = props;
 
       try {
+
         if( url !== currentSongPreviewUrl) {
           props.setUrl(currentSongPreviewUrl);
           props.setPlayer(null);
@@ -45,7 +47,7 @@ export const AudioDataContainer = compose(
           props.changeAudionState({
             startedAt: Date.now(),
             isPause: false,
-            duration: newPlayer.duration,
+            duration: parseInt(newPlayer.duration, 10),
           });
 
           newPlayer.play(0);
@@ -74,6 +76,20 @@ export const AudioDataContainer = compose(
       player && player.stop();
       props.setPlayState('play');
     },
+    onClearBtnClick: props => () => {
+      props.setPlayer(null);
+      props.setUrl(null);
+      props.changeAudionState({
+        startedAt: null,
+        pausedAt: null,
+        isPause: true,
+        playback: 0,
+        duration: 0
+      });
+      props.setProgress(0);
+      props.setPlayState('play');
+      props.setVolumeLevel(30);
+    },
     onVolumeChange: props => ({ max }) => {
       const value = max / 100;
       const level = value > 0.5 ? value * 4 : value * -4;
@@ -93,6 +109,7 @@ export const AudioDataContainer = compose(
       props.setProgress(parseInt(rate, 10));
       props.changeAudionState({
         startedAt: Date.now() - playbackTime * 1000,
+        playback: parseInt(playbackTime, 10)
       });
       return props.setPlayState('stop');
     }
@@ -102,11 +119,23 @@ export const AudioDataContainer = compose(
       setInterval(() => {
         const { startedAt, isPause, duration } = this.props.audionState;
         if(startedAt && !isPause) {
-          const playbackTime = (Date.now() - startedAt) / 1000;
+          const playbackTime = parseInt((Date.now() - startedAt) / 1000, 10);
           const rate = parseInt((playbackTime * 100) / duration, 10);
-          rate <= 100 && this.props.setProgress(rate);
+          if (playbackTime <= duration || rate <= 100) {
+            this.props.changeAudionState({playback: playbackTime});
+            this.props.setProgress(rate);
+          } else {
+            this.props.changeAudionState({
+              startedAt: null,
+              pausedAt: null,
+              isPause: true,
+              playback: 0
+            });
+            this.props.setProgress(0);
+            this.props.setPlayState('play')
+          }
         }
-      },1000)
+      },1000);
     }
   })
 )(AudioVisualizer);

@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from "prop-types";
 import classnames from 'classnames';
 import songlogo from './images/song-logo.png';
+import { timeLengthConverter } from '../../utils';
 import './styles.scss';
 
 const SongsListItem = ({ id, index, title, duration, isCurrent, clickHandle }) => {
-  const durationSec = duration % 60;
-  const durationSecConverted = durationSec > 9 ? durationSec : `0${durationSec}`;
+  const durationConverted = timeLengthConverter(duration);
   return (
     <li
       className={classnames({
@@ -36,7 +36,7 @@ const SongsListItem = ({ id, index, title, duration, isCurrent, clickHandle }) =
       </div>
       <div className="songs-list__col songs-list__col--length">
         <span>
-          {Math.floor(duration / 60)}:{durationSecConverted}
+          {durationConverted}
         </span>
       </div>
     </li>

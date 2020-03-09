@@ -9,6 +9,10 @@ const getAudioContext = () => {
 };
 
 const loadFile = (url, { frequencyC }, styles) => new Promise(async (resolve, reject) => {
+  if( !url) {
+    return;
+  }
+  
  try {
    // load audio file from server
    const response = await axios.get(url, {
@@ -76,4 +80,11 @@ const loadFile = (url, { frequencyC }, styles) => new Promise(async (resolve, re
  }
 });
 
-export { getAudioContext, loadFile }
+const timeLengthConverter = (seconds) => {
+  const timeLengthMin = Math.floor(seconds / 60);
+  const timeLengthSec = seconds % 60;
+  const timeLengthSecConverted = timeLengthSec > 9 ? timeLengthSec : `0${timeLengthSec}`;
+  return timeLengthMin.toString() + ':' + timeLengthSecConverted.toString();
+}
+
+export { getAudioContext, loadFile, timeLengthConverter }
