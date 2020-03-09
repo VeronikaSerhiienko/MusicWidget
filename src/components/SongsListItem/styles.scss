@@ -1,38 +1,34 @@
 @import '../../mixin';
 @import '../../var';
-
 .songs-list {
-	&__row {
-		display: flex;
-		align-items: center;
+  &__row {
+    display: flex;
+    align-items: center;
     min-height: 5.5rem;
-		padding: 10px 5px;
-		@include font(1.5rem, 500, $primary-color);
+    padding: 10px 5px;
+    @include font(1.5rem, 500, $primary-color);
     border-bottom: 1px solid $border-color;
-	  overflow-x: hidden;
-		text-align: left;
-		cursor: pointer;
-
+    overflow-x: hidden;
+    text-align: left;
+    cursor: pointer;
     &--current {
       color: $highlight-color;
-			.songs-list__col {
-				&--title {
-					color: $highlight-color;
-				}
-			}
+      .songs-list__col {
+        &--title {
+          color: $highlight-color;
+        }
+      }
     }
-	}
-
+  }
   &__col {
-		margin-right: 30px;
-		&:last-child {
-			@include rightSticky();
-		}
-
-		&--index {
-			width: 20px;
-			flex-shrink: 0;
-		}
+    margin-right: 30px;
+    &:last-child {
+      @include rightSticky();
+    }
+    &--index {
+      width: 20px;
+      flex-shrink: 0;
+    }
     &--title {
       color: $secondary-color;
     }
@@ -40,18 +36,18 @@
 }
 
 @include mq-min(600) {
-	.songs-list {
-		&__row {
-			padding: 30px;
-			min-width: 320px;
-		}
-	}
+  .songs-list {
+    &__row {
+      padding: 30px;
+      min-width: 320px;
+    }
+  }
 }
 
 @include mq-min(1000) {
-	.songs-list {
-		&__row {
-			max-width: 370px;
-		}
-	}
+  .songs-list {
+    &__row {
+      max-width: 370px;
+    }
+  }
 }
