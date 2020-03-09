@@ -1,90 +1,95 @@
 import axios from 'axios';
 
 const getAudioContext = () => {
-  AudioContext = window.AudioContext || window.webkitAudioContext;
-  const audioContext = new AudioContext();
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
   const analyser = audioContext.createAnalyser();
 
-  return { audioContext, analyser };
+  return {audioContext, analyser};
 };
 
-const loadFile = (url, { frequencyC }, styles) => new Promise(async (resolve, reject) => {
-  if( !url) {
+const loadFile = (url, {frequencyC}, styles) => new Promise(async (resolve, reject) => {
+  if ( !url) {
     return;
   }
-  
- try {
-   // load audio file from server
-   const response = await axios.get(url, {
-     responseType: 'arraybuffer',
-   });
-   // create audio context
-   const { audioContext, analyser } = getAudioContext();
 
-   const gainNode = audioContext.createGain();
-   // create audioBuffer (decode audio file)
-   const audioBuffer = await audioContext.decodeAudioData(response.data);
-   analyser.fftSize = styles.fftSize;
-   let frequencyDataArray = new Uint8Array(analyser.frequencyBinCount);
-   let source = null;
-   const frequencyСanvasCtx = frequencyC.getContext("2d");
-   frequencyСanvasCtx.clearRect(0, 0, frequencyC.width, frequencyC.height);
+  try {
+    // load audio file from server
+    const response = await axios.get(url, {
+      responseType: 'arraybuffer',
+    });
+    // create audio context
+    const {audioContext, analyser} = getAudioContext();
 
-   // draw frequency - bar
-   const drawFrequency = function() {
-     analyser.getByteFrequencyData(frequencyDataArray);
-     requestAnimationFrame(drawFrequency);
-     frequencyСanvasCtx.fillStyle = styles.fillStyle;
-     frequencyСanvasCtx.fillRect(0, 0, frequencyC.width, frequencyC.height);
-     frequencyСanvasCtx.beginPath();
+    const gainNode = audioContext.createGain();
+    // create audioBuffer (decode audio file)
+    const audioBuffer = await audioContext.decodeAudioData(response.data);
+    analyser.fftSize = styles.fftSize;
+    const frequencyDataArray = new Uint8Array(analyser.frequencyBinCount);
+    let source = null;
+    const frequencyСanvasCtx = frequencyC.getContext('2d');
+    frequencyСanvasCtx.clearRect(0, 0, frequencyC.width, frequencyC.height);
 
-     const barWidth = (frequencyC.width / analyser.frequencyBinCount) * 2.5;
-     let barHeight;
-     let x = 0;
+    // draw frequency - bar
+    const drawFrequency = function() {
+      analyser.getByteFrequencyData(frequencyDataArray);
+      requestAnimationFrame(drawFrequency);
+      frequencyСanvasCtx.fillStyle = styles.fillStyle;
+      frequencyСanvasCtx.fillRect(0, 0, frequencyC.width, frequencyC.height);
+      frequencyСanvasCtx.beginPath();
 
-     for(let i = 0; i < analyser.frequencyBinCount; i++) {
-       barHeight = frequencyDataArray[i];
+      const barWidth = (frequencyC.width / analyser.frequencyBinCount) * 2.5;
+      let barHeight;
+      let x = 0;
 
-       frequencyСanvasCtx.fillStyle = styles.strokeStyle;
-       frequencyСanvasCtx.fillRect(x, frequencyC.height - barHeight / 2, barWidth, barHeight / 2);
+      for (let i = 0; i < analyser.frequencyBinCount; i++) {
+        barHeight = frequencyDataArray[i];
 
-       x += barWidth + 1;
-     }
-   };
+        frequencyСanvasCtx.fillStyle = styles.strokeStyle;
+        frequencyСanvasCtx.fillRect(
+            x,
+            frequencyC.height - barHeight / 2,
+            barWidth, barHeight / 2,
+        );
 
-   const play = (resumeTime = 0) => {
-     // create audio source
-     source = audioContext.createBufferSource();
-     source.buffer = audioBuffer;
+        x += barWidth + 1;
+      }
+    };
 
-     source.connect(audioContext.destination);
+    const play = (resumeTime = 0) => {
+      // create audio source
+      source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
 
-     source.connect(gainNode);
-     gainNode.connect(audioContext.destination);
+      source.connect(audioContext.destination);
 
-     source.connect(analyser);
-     source.start(0, resumeTime);
-     drawFrequency();
-   };
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-   const stop = () => {
-     source && source.stop(0);
-   };
+      source.connect(analyser);
+      source.start(0, resumeTime);
+      drawFrequency();
+    };
 
-   const setVolume = (level) => {
-     gainNode.gain.setValueAtTime(level, audioContext.currentTime);
-   };
-   resolve({ play, stop, setVolume, duration: audioBuffer.duration,  });
- } catch (e) {
-   reject(e)
- }
+    const stop = () => {
+      source && source.stop(0);
+    };
+
+    const setVolume = (level) => {
+      gainNode.gain.setValueAtTime(level, audioContext.currentTime);
+    };
+    resolve({play, stop, setVolume, duration: audioBuffer.duration});
+  } catch (e) {
+    reject(e);
+  }
 });
 
 const timeLengthConverter = (seconds) => {
   const timeLengthMin = Math.floor(seconds / 60);
   const timeLengthSec = seconds % 60;
-  const timeLengthSecConverted = timeLengthSec > 9 ? timeLengthSec : `0${timeLengthSec}`;
+  const timeLengthSecConverted = timeLengthSec > 9 ?
+  timeLengthSec :
+  `0${timeLengthSec}`;
   return timeLengthMin.toString() + ':' + timeLengthSecConverted.toString();
-}
+};
 
-export { getAudioContext, loadFile, timeLengthConverter }
+export {getAudioContext, loadFile, timeLengthConverter};

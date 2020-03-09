@@ -1,6 +1,5 @@
-
-
 @import '../../var';
+@import '../../mixin';
 
 .overlay {
   left: 0;
@@ -13,12 +12,12 @@
 
 .loader {
   display: inline-block;
-  left: 50%;
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: 8rem;
   height: 8rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 
   div {
     display: inline-block;
@@ -29,18 +28,15 @@
     animation: loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 
     &:nth-child(1) {
-      left: 8px;
-      animation-delay: -0.24s;
+      @include tickLeftPositionAndDelay(8px, -0.24s);
     }
 
     &:nth-child(2) {
-      left: 32px;
-      animation-delay: -0.12s;
+      @include tickLeftPositionAndDelay(32px, -0.12s);
     }
 
     &:nth-child(3) {
-      left: 56px;
-      animation-delay: 0;
+      @include tickLeftPositionAndDelay(56px, 0);
     }
   }
 }

@@ -7,9 +7,7 @@
 		align-items: center;
     height: 5.5rem;
 		padding: 30px 5px;
-    font-weight: 500;
-    color: $primary-color;
-    font-size: 1.5rem;
+		@include font(1.5rem, 500, $primary-color);
     border-bottom: 1px solid $border-color;
 	  overflow-x: hidden;
 		text-align: left;
@@ -28,8 +26,7 @@
   &__col {
 		margin-right: 30px;
 		&:last-child {
-			margin-right: 0;
-			margin-left: auto;
+			@include rightSticky();
 		}
 
 		&--index {

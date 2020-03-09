@@ -1,25 +1,25 @@
-import React, { useEffect, useRef } from 'react';
-import PropTypes from "prop-types";
-import { connect } from 'react-redux';
+import React, {useEffect, useRef} from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import InputRange from 'react-input-range';
+import {currentSongDataSet} from '../../store/actions/currentSongActions';
+import {timeLengthConverter} from '../../utils';
 import './styles.scss';
 
-import { currentSongDataSet } from '../../store/actions/currentSongActions';
-import { timeLengthConverter } from '../../utils';
 
 const useCompare = (val) => {
-    const prevVal = usePrevious(val);
-    return JSON.stringify(prevVal) !== JSON.stringify(val)
-}
+  const prevVal = usePrevious(val);
+  return JSON.stringify(prevVal) !== JSON.stringify(val);
+};
 
 const usePrevious = (value) => {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-}
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
 
 const AudioVisualizer = ({
   playState,
@@ -34,17 +34,33 @@ const AudioVisualizer = ({
   currentSongDataSet,
   artistData: {data: artistDataArray},
   currentSong: {id: currentSongId},
-  audionState: {playback, duration}
+  audionState: {playback, duration},
 }) => {
   const durationConverted = timeLengthConverter(duration);
   const playbackConverted = timeLengthConverter(playback);
   const currentSongData = getCurrentSongData();
-  const { preview, album, artist, title, index} = currentSongData;
-  const currentSongCoverSmallUrl = album && album.cover_small ? album.cover_small : '';
-  const currentSongCoverMediumUrl = album && album.cover_small ? album.cover_medium : '';
-  const currentSongArtistName =  artist && artist.name ? artist.name : 'Artist name';
-  const currentSongPreviewUrl = preview ? preview : '';
-  const currentSongTitle = title ? title : 'Song title';
+  const {
+    preview,
+    album,
+    artist,
+    title,
+    index,
+  } = currentSongData;
+  const currentSongCoverSmallUrl = album && album.cover_small ?
+    album.cover_small :
+  '';
+  const currentSongCoverMediumUrl = album && album.cover_small ?
+    album.cover_medium :
+  '';
+  const currentSongArtistName = artist && artist.name ?
+    artist.name :
+  'Artist name';
+  const currentSongPreviewUrl = preview ?
+    preview :
+  '';
+  const currentSongTitle = title ?
+    title :
+  'Song title';
   const canvasRef = React.createRef();
   const hasCurrentSongPreviewUrlChanged = useCompare(preview);
   const artistDataArrayLength = artistDataArray.length;
@@ -54,8 +70,11 @@ const AudioVisualizer = ({
   useEffect(() => {
     if (hasCurrentSongPreviewUrlChanged ) {
       onStopBtnClick();
-      if(currentSongPreviewUrl) {
-        onPlayBtnClick({currentSongPreviewUrl: currentSongPreviewUrl, frequencyC: canvasRef.current });
+      if (currentSongPreviewUrl) {
+        onPlayBtnClick({
+          currentSongPreviewUrl: currentSongPreviewUrl,
+          frequencyC: canvasRef.current,
+        });
       } else {
         onClearBtnClick();
       }
@@ -63,14 +82,16 @@ const AudioVisualizer = ({
   });
 
   function getCurrentSongData() {
-    const currentSongIndex = artistDataArray.findIndex((item) => item.id === currentSongId);
+    const currentSongIndex = artistDataArray.findIndex(
+      (item) => item.id === currentSongId,
+    );
     const currentSong = artistDataArray[currentSongIndex];
     return {...currentSong, index: currentSongIndex};
   }
 
   function onBackwardForwardBtnClick(type) {
     let newSong;
-    switch(type) {
+    switch (type) {
       case 'backward':
         newSong = getPreviuosSong();
         break;
@@ -94,15 +115,21 @@ const AudioVisualizer = ({
   }
 
 
-  return(
+  return (
     <>
       <div className="visualizing-container">
         <div className="visualizing-container__pair">
           <div className="visualizing-container__cover-wrapper">
             {currentSongCoverSmallUrl && (
               <picture>
-                <source media="(min-width: 600px)" srcSet={currentSongCoverMediumUrl} />
-                <source media="(min-width: 320px)" srcSet={currentSongCoverSmallUrl} />
+                <source
+                  media="(min-width: 600px)"
+                  srcSet={currentSongCoverMediumUrl}
+                />
+                <source
+                  media="(min-width: 320px)"
+                  srcSet={currentSongCoverSmallUrl}
+                />
                 <img src={currentSongCoverSmallUrl} alt="Cover image" />
               </picture>
             )}
@@ -110,18 +137,26 @@ const AudioVisualizer = ({
           <div className="visualizing-container__bars-wrapper">
             {currentSongCoverSmallUrl && (
               <div className="visualizing-container__time-wrapper">
-                <p className="visualizing-container__playback">{playbackConverted}</p>
-                <p className="visualizing-container__duration">{durationConverted}</p>
+                <p className="visualizing-container__playback">
+                  {playbackConverted}
+                </p>
+                <p className="visualizing-container__duration">
+                  {durationConverted}
+                </p>
               </div>
             )}
-            <canvas className="frequency-bars" width="1024" height="100" ref={canvasRef}></canvas>
+            <canvas
+              width="1024"
+              height="100"
+              ref={canvasRef}
+            />
           </div>
         </div>
 
         <div
           className={classnames({
             'visualizing-container__progress-bar-wrapper': true,
-            'visualizing-container__progress-bar-wrapper--not-allowed': !currentSongPreviewUrl
+            'visualizing-container__progress-bar-wrapper--not-allowed': !currentSongPreviewUrl,
           })}
           onClick={onProgressClick}>
           <div
@@ -135,7 +170,6 @@ const AudioVisualizer = ({
 
         <div className="visualizing-container__controls-wrapper">
           <div className="visualizing-container__controls">
-
             <button
               type="button"
               className="visualizing-container__button visualizing-container__button--backward"
@@ -148,11 +182,14 @@ const AudioVisualizer = ({
               className={classnames({
                 'visualizing-container__button': true,
                 'visualizing-container__button--play': playState === 'play',
-                'visualizing-container__button--pause': playState !== 'play'
+                'visualizing-container__button--pause': playState !== 'play',
               })}
               onClick={
                 playState === 'play' ?
-                () => onPlayBtnClick({currentSongPreviewUrl: currentSongPreviewUrl, frequencyC: canvasRef.current }) :
+                () => onPlayBtnClick({
+                  currentSongPreviewUrl: currentSongPreviewUrl,
+                  frequencyC: canvasRef.current,
+                }) :
                 onStopBtnClick
               }
               disabled={!currentSongPreviewUrl}
@@ -189,8 +226,8 @@ const AudioVisualizer = ({
                 })}
                 onClick={
                   volumeLevel ?
-                  () => onVolumeChange({ max: 0 }) :
-                  () => onVolumeChange({ max: 100 })
+                  () => onVolumeChange({max: 0}) :
+                  () => onVolumeChange({max: 100})
                 }
                 disabled={!currentSongPreviewUrl}
               />
@@ -198,7 +235,10 @@ const AudioVisualizer = ({
                 <InputRange
                   maxValue={100}
                   minValue={0}
-                  value={{ min: 0, max: volumeLevel }}
+                  value={{
+                    min: 0,
+                    max: volumeLevel,
+                  }}
                   onChange={onVolumeChange}
                   disabled={!currentSongPreviewUrl}
                 />
@@ -209,23 +249,33 @@ const AudioVisualizer = ({
       </div>
     </>
   );
-}
+};
 
-  const mapStateToProps = state => ({
-    currentSong: state.currentSong,
-    artistData: state.artistData
-  });
+AudioVisualizer.propTypes = {
+  currentSong: PropTypes.object.isRequired,
+  artistData: PropTypes.object.isRequired,
+  currentSongDataSet: PropTypes.func.isRequired,
+  audionState: PropTypes.object.isRequired,
+  playState: PropTypes.string.isRequired,
+  progress: PropTypes.number.isRequired,
+  volumeLevel: PropTypes.number.isRequired,
+  loading: PropTypes.bool.isRequired,
+  onPlayBtnClick: PropTypes.func.isRequired,
+  onVolumeChange: PropTypes.func.isRequired,
+  onStopBtnClick: PropTypes.func.isRequired,
+  onClearBtnClick: PropTypes.func.isRequired,
+  onProgressClick: PropTypes.func.isRequired,
+};
 
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      currentSongDataSet: (id) => dispatch(currentSongDataSet(id))
-    };
-  }
+const mapStateToProps = (state) => ({
+  currentSong: state.currentSong,
+  artistData: state.artistData,
+});
 
-  AudioVisualizer.propTypes = {
-    currentSong: PropTypes.object.isRequired,
-    artistData: PropTypes.object.isRequired,
-    currentSongDataSet: PropTypes.func.isRequired,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    currentSongDataSet: (id) => dispatch(currentSongDataSet(id)),
   };
+};
 
-  export default connect(mapStateToProps, mapDispatchToProps)(AudioVisualizer);
+export default connect(mapStateToProps, mapDispatchToProps)(AudioVisualizer);

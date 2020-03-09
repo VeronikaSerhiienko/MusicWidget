@@ -28,9 +28,7 @@
   &__time-wrapper {
     display: flex;
     justify-content: space-between;
-    font-weight: 500;
-    color: $primary-color;
-    font-size: 1.2rem;
+    @include font(1.2rem, 500, $primary-color);
   }
 
   &__duration {
@@ -62,7 +60,7 @@
   }
 
   &__progress {
-    background-image: linear-gradient(90deg, #07a7e3 0%, #31d9c3 100%);
+    background-image: linear-gradient(90deg, $gradient-start-color 0%, $gradient-end-color 100%);
     height: 100%;
     transition: width 0.6s ease;
   }
@@ -145,9 +143,7 @@
   }
 
   &__description-title {
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: $secondary-color;
+    @include font(1.5rem, 700, $secondary-color);
     p + p {
       font-size: 1.2rem;
       font-weight: 500;
@@ -183,28 +179,17 @@
         }
       }
 
-      &__slider-container {
-        display: none;
-      }
-
+      &__slider-container,
       &__slider {
         display: none;
       }
 
-      &__label--value {
-        display: none;
-      }
-
-      &__label--max {
-        display: none;
-      }
-
-      &__label--min {
-        display: none;
-      }
-
-      &__slider {
-        display: none;
+      &__label {
+        &--value,
+        &--max,
+        &--min {
+          display: none;
+        }
       }
 
       &__track {

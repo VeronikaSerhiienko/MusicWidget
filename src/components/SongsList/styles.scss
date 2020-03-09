@@ -15,9 +15,7 @@
     max-width: 370px;
     height: 5.5rem;
     padding: 30px;
-    font-weight: 500;
-    color: $secondary-color;
-    font-size: 1.5rem;
+    @include font(1.5rem, 500, $secondary-color);
   }
 }
 
