@@ -1,0 +1,23 @@
+@import '../../mixin';
+
+.music-widget {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
+}
+
+@include mq-min(600) {
+  .music-widget {
+    padding: 20px 10px;
+  }
+}
+
+@include mq-min(1000) {
+  .music-widget {
+    flex-direction: row;
+    justify-content: space-between;
+    .songs-list {
+      margin-left: 30px;
+    }
+  }
+}

@@ -1,0 +1,261 @@
+@import '../../mixin';
+@import '../../var';
+
+.visualizing-container {
+  max-width: 1214px;
+  padding: 7px 0;
+  &__pair {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 70px;
+
+    div + div {
+      margin-left: 10px;
+    }
+  }
+
+
+  &__cover-wrapper {
+    display: flex;
+    width: 100px;
+    height: 100%;
+     picture {
+       margin: auto;
+     }
+  }
+
+  &__bars-wrapper {
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__progress-bar-wrapper {
+    height: 7px;
+    background: $grey-color;
+    border: 1px solid $border-color;
+    margin-top: 1.5rem;
+    cursor: pointer;
+
+    &--not-allowed {
+      cursor: not-allowed;
+    }
+  }
+
+  &__progress {
+    background-image: linear-gradient(90deg, #07a7e3 0%, #31d9c3 100%);
+    height: 100%;
+    transition: width 0.6s ease;
+  }
+
+  &__controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__button {
+    display: block;
+    border: 0;
+    width: 6rem;
+    height: 3rem;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: pointer;
+
+    &--backward {
+      background-image: url('./images/backward-btn.png');
+    }
+
+    &--play {
+      background-image: url('./images/play-btn.png');
+    }
+
+    &--pause {
+      background-image: url('./images/pause-btn.png');
+    }
+
+    &--forward {
+      background-image: url('./images/forward-btn.png');
+    }
+
+    &--volume {
+      background-image: url('./images/volume-btn.png');
+      background-position: left center;
+    }
+
+    &--mute {
+      background-image: url('./images/mute-btn.png');
+      background-position: left center;
+    }
+
+    &:disabled {
+      cursor:not-allowed;
+    }
+  }
+
+  &__additional-wrapper {
+    display: flex;
+  }
+
+  &__description {
+    display: flex;
+    align-items: center;
+  }
+
+  &__description-poster {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: $grey-color;
+    margin-right: 2rem;
+    flex-shrink: 0;
+
+    img {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__description-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: $secondary-color;
+    p + p {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+
+  &__volume-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 60px;
+    margin-right: 0;
+    margin-left: auto;
+
+    .range-select {
+      width: 100%;
+    }
+
+    .input-range {
+      height: 1rem;
+      position: relative;
+      width: 100%;
+      top: 2px;
+
+      &--disabled {
+        cursor: not-allowed;
+        .input-range__track {
+          background: $grey-color;
+          cursor: not-allowed;
+        }
+
+        .input-range__slider {
+          display: none;
+        }
+      }
+
+      &__slider-container {
+        display: none;
+      }
+
+      &__slider {
+        display: none;
+      }
+
+      &__label--value {
+        display: none;
+      }
+
+      &__label--max {
+        display: none;
+      }
+
+      &__label--min {
+        display: none;
+      }
+
+      &__slider {
+        display: none;
+      }
+
+      &__track {
+        border-radius: 0;
+        cursor: pointer;
+        display: block;
+        height: 0.4rem;
+        position: relative;
+        transition: left 0.3s ease-out, width 0.3s ease-out;
+        background: $grey-color;
+
+        &--active {
+          background: $dark-grey-color;
+        }
+
+        &--background {
+          left: 0;
+          position: absolute;
+          right: 0;
+        }
+      }
+    }
+  }
+}
+
+@include mq-min(600) {
+  .visualizing-container {
+    &__pair {
+      padding: 0 10px;
+      height: 160px;
+
+      div + div {
+        margin-left: 50px;
+      }
+    }
+
+
+    &__cover-wrapper {
+      width: 150px;
+      picture {
+        img {
+          width: 100%;
+        }
+      }
+    }
+
+    &__bars-wrapper {
+      display: flex;
+      canvas {
+        margin: auto;
+        height: 60%;
+      }
+    }
+
+    &__controls-wrapper {
+      flex-direction: row;
+      justify-content: space-between;
+      flex: 1;
+    }
+
+    &__additional-wrapper {
+      flex: 2;
+    }
+
+    &__volume-wrapper {
+      flex-direction: row;
+      align-items: center;
+      width: 200px;
+    }
+  }
+}

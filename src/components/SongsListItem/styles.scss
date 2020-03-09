@@ -1,0 +1,60 @@
+@import '../../mixin';
+@import '../../var';
+
+.songs-list {
+	&__row {
+		display: flex;
+		align-items: center;
+    height: 5.5rem;
+		padding: 30px 5px;
+    font-weight: 500;
+    color: $primary-color;
+    font-size: 1.5rem;
+    border-bottom: 1px solid $border-color;
+	  overflow-x: hidden;
+		text-align: left;
+		cursor: pointer;
+
+    &--current {
+      color: $highlight-color;
+			.songs-list__col {
+				&--title {
+					color: $highlight-color;
+				}
+			}
+    }
+	}
+
+  &__col {
+		margin-right: 30px;
+		&:last-child {
+			margin-right: 0;
+			margin-left: auto;
+		}
+
+		&--index {
+			width: 20px;
+			flex-shrink: 0;
+		}
+    &--title {
+      color: $secondary-color;
+    }
+  }
+}
+
+@include mq-min(600) {
+	.songs-list {
+		&__row {
+			padding: 30px;
+			min-width: 320px;
+		}
+	}
+}
+
+@include mq-min(1000) {
+	.songs-list {
+		&__row {
+			max-width: 370px;
+		}
+	}
+}
