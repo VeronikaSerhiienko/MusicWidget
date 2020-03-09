@@ -5,8 +5,8 @@
 	&__row {
 		display: flex;
 		align-items: center;
-    height: 5.5rem;
-		padding: 30px 5px;
+    min-height: 5.5rem;
+		padding: 10px 5px;
 		@include font(1.5rem, 500, $primary-color);
     border-bottom: 1px solid $border-color;
 	  overflow-x: hidden;
