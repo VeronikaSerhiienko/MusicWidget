@@ -219,9 +219,16 @@ button::-moz-focus-inner,
 /**
  * Restore the focus styles unset by the previous rule.
  */
-button:focus,
-input: focus {
+button {
+ &:focus {
   outline:0;
+ }
+}
+
+input {
+  &:focus {
+    outline: 0;
+  }
 }
 
 button:-moz-focusring,
