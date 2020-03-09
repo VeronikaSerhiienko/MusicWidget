@@ -5,5 +5,5 @@
 npm install
 npm start
 
-#prodaction
+# production
 npm run build
